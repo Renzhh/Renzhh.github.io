@@ -1,0 +1,477 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    
+    <title>OpenStack组件分析及安装指导(2)--身份验证服务、镜像服务 | 夕阳·然诺</title>
+    <meta name="author" content="Sunset_Ren">
+    
+    <meta name="description" content="夕阳·然诺, 一枚在校生的技术、生活实录">
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <meta property="og:title" content="OpenStack组件分析及安装指导(2)--身份验证服务、镜像服务"/>
+    <meta property="og:site_name" content="夕阳·然诺"/>
+
+    <link rel="alternate" href="/atom.xml" title="夕阳·然诺" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/normalize.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/furatto.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify_raytaylorism.css" type="text/css">
+        
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.10.2.min.js"></script>
+    <script src="/js/jquery.jpanelmenu.js"></script>
+</head>
+
+
+<body class="container-fluid">
+    <header id="page-header">
+        <div class="navbar inverse-navbar">
+    <div class="navbar-inner">
+        <div class="container-center">
+            <a href="/index.html" class="menu-trigger" data-meteocon="M">
+                <i class="icon-reorder"></i>
+            </a>
+            <div class="nav-collapse navbar-responsive-collapse collapse">
+                <nav id="menu">
+                    <ul class="nav">
+                        <li><a class="brand" id="blog-title" href="/index.html">夕阳·然诺</a></li>
+                    </ul>
+                    <div class="pull-right nav" id="nav-button-group">
+                        
+                            <a href="/" class="menu-home btn btn-primary btn-large">
+                                <i class="icon-home icon-white"></i>
+                                首页
+                            </a>
+                        
+                            <a href="/archives" class="menu-archive btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                归档
+                            </a>
+                        
+                            <a href="javascript:void(0);" class="menu-category btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                分类
+                            </a>
+                        
+                            <a href="/reading" class="menu-reading btn btn-primary btn-large">
+                                <i class="icon-book icon-white"></i>
+                                读书
+                            </a>
+                        
+                            <a href="/about" class="menu-about btn btn-primary btn-large">
+                                <i class="icon-user icon-white"></i>
+                                关于
+                            </a>
+                        
+                    </div>
+                </nav>
+                <nav id="jPanelMenu-menu-side">
+    <ul class="nav main-menu">
+        <li><a class="brand" href="index.html">夕阳·然诺</a></li>
+        
+            <li>
+                <a href="/" class="menu-home">
+                    <i class="icon-home icon-white"></i>
+                    首页
+                </a>
+            </li>
+        
+            <li>
+                <a href="/archives" class="menu-archive">
+                    <i class="icon-archive icon-white"></i>
+                    归档
+                </a>
+            </li>
+        
+            <li>
+                <a href="javascript:void(0);" class="menu-category">
+                    <i class="icon-archive icon-white"></i>
+                    分类
+                </a>
+            </li>
+        
+            <li>
+                <a href="/reading" class="menu-reading">
+                    <i class="icon-book icon-white"></i>
+                    读书
+                </a>
+            </li>
+        
+            <li>
+                <a href="/about" class="menu-about">
+                    <i class="icon-user icon-white"></i>
+                    关于
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="nav category-menu hide">
+        <li>
+            <span><a class="brand" href="javascript:void(0);">分类目录</a></span>
+            <span><a class="btn-back brand pull-right" href="javascript:void(0);">
+                <i class="icon-arrow-left"></i>
+            </a></span>
+        </li>
+
+        
+
+        
+
+            
+
+            <li collapse-level="0">
+                <a href="/categories/markdown/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    markdown(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/OpenStack/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    OpenStack(5)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/Linux/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    Linux(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+        
+    </ul>
+</nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </header>
+    <div id="content-wrapper">
+        <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>OpenStack组件分析及安装指导(2)--身份验证服务、镜像服务</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2014-09-17T17:15:37.000Z">2014 09 18</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_身份验证服务_Keystone"><span class="toc-number">1.</span> <span class="toc-text">1. 身份验证服务 Keystone</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1_Keystone服务的安装"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 Keystone服务的安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2_定义相关的users、roles、tenants"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 定义相关的users、roles、tenants</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3_定义_services_and_API_endpoints"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 定义 services and API endpoints</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4_验证Keystone服务的安装"><span class="toc-number">1.4.</span> <span class="toc-text">1.4 验证Keystone服务的安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_OpenStack命令行客户端"><span class="toc-number">2.</span> <span class="toc-text">2. OpenStack命令行客户端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3_镜像服务_Glance"><span class="toc-number">3.</span> <span class="toc-text">3 镜像服务 Glance</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1_Glance服务的安装"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 Glance服务的安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2_验证Glance服务的安装"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 验证Glance服务的安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">4.</span> <span class="toc-text">参考文献</span></a></li></ol>
+    </div>
+
+    <div class="entry">
+        <p>在上一篇”OpenStack组件分析及安装指导(1)—基本介绍、环境要求”中对OpenStack作了简单介绍以及基本环境要求的搭建。本文将更进一步，阐述身份验证服务、OpenStack命令行客户端以及镜像服务。</p>
+<h2 id="1-_身份验证服务_Keystone">1. 身份验证服务 Keystone</h2>
+<p>Keystone在OpenStack框架中起着身份验证、服务规则和服务令牌的功能，它实现了OpenStack的Identity API。类似一个服务总线，或者说是整个OpenStack框架的注册表，其它服务通过Keystone来注册服务的Endpoint（服务访问的URL）任何服务之间相互的调用，都需要经过Keystone的身份验证，以获得目标服务的Endpoint来找到目标服务。Keystone在整个OpenStack系统中参与的流程如 <a href="http://7naqqb.com1.z0.glb.clouddn.com/keystone在OpenStack中访问流程.jpg" target="_blank" rel="external">图1</a> 所示。</p>
+<a id="more"></a>
+<div align="center"><br>    <img src="http://7naqqb.com1.z0.glb.clouddn.com/keystone在OpenStack中访问流程.jpg" width="640" height="500" alt="图 1. keystone在OpenStack中访问流程"><br><br>    图1. keystone在OpenStack中访问流程<br></div>
+
+<h3 id="1-1_Keystone服务的安装">1.1 Keystone服务的安装</h3>
+<p>第1步，在Controller节点下安装Identify Service</p>
+<pre><code>apt-<span class="keyword">get</span> install keystone
+</code></pre><p>第2步，修改配置文件/etc/keystone/keystone.conf中[database]部分指定一个本地的数据库用来存储信息，使用的用户名（username）为keystone，密码为123456</p>
+<pre><code><span class="title">[database]</span>
+<span class="setting">connection = <span class="value">mysql://keystone:<span class="number">123456</span>@controller/keystone</span></span>
+</code></pre><p>第3步，为keystone创建数据库，并赋予相关访问权限：</p>
+<figure class="highlight"><pre><div class="line">mysql <span class="attribute">-u</span> root –p</div><div class="line">mysql<span class="subst">&gt;</span> CREATE DATABASE keystone;</div><div class="line">mysql<span class="subst">&gt;</span>GRANT <span class="literal">ALL</span> PRIVILEGES <span class="keyword">ON</span> keystone<span class="built_in">.</span><span class="subst">*</span> <span class="keyword">TO</span> <span class="string">'keystone'</span>@<span class="string">'localhost'</span> IDENTIFIED <span class="keyword">BY</span>  <span class="string">'123456'</span>;</div><div class="line">mysql<span class="subst">&gt;</span> GRANT <span class="literal">ALL</span> PRIVILEGES <span class="keyword">ON</span> keystone<span class="built_in">.</span><span class="subst">*</span> <span class="keyword">TO</span> <span class="string">'keystone'</span>@<span class="string">'%'</span>  IDENTIFIED <span class="keyword">BY</span> <span class="string">'123456'</span>;</div></pre></figure>
+
+<p>第4步，为keystone创建数据库表</p>
+<pre><code>su <span class="operator">-s</span> /bin/sh -c <span class="string">"keystone-manage db_sync"</span> keystone
+</code></pre><p>第5步，修改配置文件/etc/keystone/keystone.conf中[DEFAULT]部分，使用一个共享的密码作为一个Identity Service与其它OpenStack Service之间验证的令牌：admin_token = 123456；</p>
+<p>第6步，配置日志文件目录，编辑配置文件/etc/keystone/keystone.conf中[DEFAULT]部分</p>
+<pre><code>log_dir <span class="subst">=</span> /<span class="built_in">var</span>/<span class="keyword">log</span>/keystone
+</code></pre><p>第7步，重新启动 Identity服务.</p>
+<pre><code><span class="class"><span class="keyword">service</span> <span class="title">keystone</span> restart</span>
+</code></pre><h3 id="1-2_定义相关的users、roles、tenants">1.2 定义相关的users、roles、tenants</h3>
+<p>在定义之前，先要导入相关环境。</p>
+<pre><code><span class="keyword">export</span> OS_SERVICE_TOKEN=<span class="number">123456</span>
+<span class="keyword">export</span> OS_SERVICE_ENDPOINT=http:<span class="comment">//controller:35357/v2.0</span>
+</code></pre><p>第1步，建立一个管理 (admin) 用户(user)，用户代表可以通过Keystone进行访问的人或程序。用户通过认证信息（credentials，如密码、API Keys等）进行验证：</p>
+<pre><code>keystone <span class="literal">user</span>-create --name=<span class="literal">admin</span> --pass=<span class="number">123456</span> --email= <span class="literal">admin</span>@controller
+</code></pre><p>第2步，建立一个管理(admin ) 角色(role), 角色代表一组用户可以访问哪些资源的权限。</p>
+<pre><code>keystone role-<span class="operator"><span class="keyword">create</span> <span class="comment">--name=admin</span></span>
+</code></pre><p>第3步，建立一个管理（admin）租户(tenant)，它是各个服务中的一些可以访问的资源的集合：</p>
+<pre><code>keystone tenant-create <span class="variable">--name=</span>admin <span class="variable">--description=</span><span class="string">"Admin Tenant"</span>
+</code></pre><p>第4步，把上面创建user、role、tenant相关联在一起：</p>
+<pre><code>keystone <span class="literal">user</span>-role-add --<span class="literal">user</span>=<span class="literal">admin</span> --tenant=<span class="literal">admin</span> --role=<span class="literal">admin</span>
+keystone <span class="literal">user</span>-role-add --<span class="literal">user</span>=<span class="literal">admin</span> --role=_member_ --tenant=<span class="literal">admin</span> 
+(_member_为系统默认的一个role)
+</code></pre><p>第5步，仿照上面，创建一个普通的user、tenant并相关联在一起</p>
+<figure class="highlight"><pre><div class="line">keystone user-create <span class="variable">--name=</span>demo <span class="variable">--pass=</span><span class="number">123456</span> <span class="variable">--email=</span> demo@controller</div><div class="line">keystone tenant-create <span class="variable">--name=</span>demo <span class="variable">--description=</span><span class="string">"Demo Tenant"</span></div><div class="line">keystone user-role-add <span class="variable">--user=</span>demo <span class="variable">--role=</span>_member_ <span class="variable">--tenant=</span>demo</div></pre></figure>
+
+<p>最后，创建一个service 租户.</p>
+<pre><code>keystone tenant-create <span class="variable">--name=</span>service <span class="variable">--description=</span><span class="string">"Service Tenant"</span>
+</code></pre><h3 id="1-3_定义_services_and_API_endpoints">1.3 定义 services and API endpoints</h3>
+<p>Identity Service需要确定相关的OpenStack Services是否已安装或是它们在网络中的位置，我们需要为每一个service 注册。我们首先需要为 Identity Service自己注册，导入相关环境变量。</p>
+<p>首先，为Identity Service建立服务入口：</p>
+<pre><code>keystone service-create <span class="variable">--name=</span>keystone <span class="variable">--type=</span>identity <span class="variable">--description=</span><span class="string">"OpenStack Identity"</span>；
+</code></pre><p>接着，通过上面返回的 service ID，建立 Identity  Service的API endpoint：</p>
+<figure class="highlight"><pre><div class="line">keystone endpoint-create \</div><div class="line">  -<span class="ruby">-service-id=<span class="variable">$(</span>keystone service-list | awk <span class="string">'/ identity / {print $2}'</span>) \</span></div><div class="line">  -<span class="ruby">-publicurl=<span class="symbol">http:</span>/<span class="regexp">/controller:5000/v</span>2.<span class="number">0</span> \</span></div><div class="line">  -<span class="ruby">-internalurl=<span class="symbol">http:</span>/<span class="regexp">/controller:5000/v</span>2.<span class="number">0</span> \</span></div><div class="line">  -<span class="ruby">-adminurl=<span class="symbol">http:</span>/<span class="regexp">/controller:35357/v</span>2.<span class="number">0</span></span></div></pre></figure>
+
+<h3 id="1-4_验证Keystone服务的安装">1.4 验证Keystone服务的安装</h3>
+<p>第1步，导入相关配置好的环境变量：source /admin-openrc.sh<br>其中内容为：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">export</span> OS_USERNAME=admin</div><div class="line"><span class="keyword">export</span> OS_PASSWORD=<span class="number">123456</span></div><div class="line"><span class="keyword">export</span> OS_TENANT_NAME=admin</div><div class="line"><span class="keyword">export</span> OS_AUTH_URL=http:<span class="comment">//controller:35357/v2.0；</span></div></pre></figure>
+
+<p>第2步，验证admin account可以被授权执行相关的管理命令：</p>
+<pre><code>keystone <span class="literal">user</span>-list
+keystone <span class="literal">user</span>-role-list --<span class="literal">user</span> <span class="literal">admin</span> --tenant <span class="literal">admin</span>
+</code></pre><p>如果没有提示错误，并且可以显示之前建立的相关user、role等信息说明已成功安装，也可以查看相关的日志文件保证正确地运行。</p>
+<h2 id="2-_OpenStack命令行客户端">2. OpenStack命令行客户端</h2>
+<p>OpenStack中有两种不同的界面用来管理云资源。一个是通过基于Web页面的Dashboard来管理，另一个可以通过安装OpenStack命令行客户端来管理。</p>
+<p>第1步，安装必要的软件，服务器的系统是Debian Wheezy系列：</p>
+<pre><code>apt-<span class="built_in">get</span> install <span class="keyword">python</span>-pip
+</code></pre><p>第2步，安装客户端，对于不同的服务组件需要分别安装，在安装时只需把下面命令中的PROJECT替换成对应的组件名即可。</p>
+<pre><code>pip install <span class="keyword">python</span>-PROJECTclient
+</code></pre><p>例如：</p>
+<figure class="highlight"><pre><div class="line">pip install <span class="keyword">python</span>-novaclient</div><div class="line">pip install <span class="keyword">python</span>-keystoneclient</div><div class="line">pip install <span class="keyword">python</span>-neurtronclient</div><div class="line">pip install <span class="keyword">python</span>-glanceclient</div></pre></figure>
+
+<p>然后就可以在命令行中，使用相关服务的命令执行OpenStack相关操作；</p>
+<p>第3步，建立用于验证的环境变量文件。在Controller节点下，建立一个名为PROJECT-openrc.sh的文件。其中PROJECT为不同用户名，每个包含自己的验证信息。在我们的系统包含如下两个环境变量文件：</p>
+<p>1)    admin-openrc.sh</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">export</span> OS_USERNAME=admin</div><div class="line"><span class="keyword">export</span> OS_PASSWORD=<span class="number">123456</span></div><div class="line"><span class="keyword">export</span> OS_TENANT_NAME=admin</div><div class="line"><span class="keyword">export</span> OS_AUTH_URL=http:<span class="comment">//controller:35357/v2.0</span></div></pre></figure>
+
+<p>2)    demo-openrc.sh</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">export</span> OS_USERNAME=demo</div><div class="line"><span class="keyword">export</span> OS_PASSWORD=<span class="number">123456</span></div><div class="line"><span class="keyword">export</span> OS_TENANT_NAME=demo</div><div class="line"><span class="keyword">export</span> OS_AUTH_URL=http:<span class="comment">//controller:35357/v2.0.</span></div></pre></figure>
+
+<h2 id="3_镜像服务_Glance">3 镜像服务 Glance</h2>
+<p>通过Glance（Image Service），OpenStack的3个模块被链接成了一个整体，Glance为Nova提供镜像的查找操作，而Swift又为Glance提供实际的存储服务，Swift可以看作是Glacne存储接口的一个具体实现。Image Service主要包含两个部分，glance-api 主要是用来接受各种api调用请求，并提供相应的操作。glacne-registry 用来和MySQL数据库进行交互，存储或者获取镜像的元数据。</p>
+<h3 id="3-1_Glance服务的安装">3.1 Glance服务的安装</h3>
+<p>第1步，在Controller节点安装Image Service</p>
+<pre><code>apt-<span class="built_in">get</span> install glance <span class="keyword">python</span>-glanceclient；
+</code></pre><p>第2步，修改配置文件/etc/glance/glance-api.conf 和/etc/glance/glance-registry.conf中<strong>[database]</strong>部分：</p>
+<pre><code><span class="title">connection</span> = <span class="url">mysql://glance:123456</span> <span class="variable">@controller</span>/glance
+</code></pre><p>glance-api与glance-registry服务需要在MySQL中建立自己的相关数据库；</p>
+<p>第3步，使Image Service能够使用RabbitMQ，编辑配置文件/etc/glance/glance-api.conf中[DEFAULT]部分：</p>
+<figure class="highlight"><pre><div class="line"><span class="variable">rpc_backend =</span> rabbit</div><div class="line"><span class="variable">rabbit_host =</span> <span class="number">192.168</span>.<span class="number">0.11</span></div><div class="line"><span class="variable">rabbit_password =</span> <span class="number">123456</span>；</div></pre></figure>
+
+<p>第4步，在MySQL中建立属于用户为glance的相关数据库，并授予访问权限：</p>
+<figure class="highlight"><pre><div class="line">mysql <span class="attribute">-u</span> root –p</div><div class="line">mysql<span class="subst">&gt;</span> CREATE DATABASE glance;</div><div class="line">mysql<span class="subst">&gt;</span> GRANT <span class="literal">ALL</span> PRIVILEGES <span class="keyword">ON</span> glance<span class="built_in">.</span><span class="subst">*</span> <span class="keyword">TO</span> <span class="string">'glance'</span>@<span class="string">'controller'</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">'123456'</span>;</div><div class="line">mysql<span class="subst">&gt;</span> GRANT <span class="literal">ALL</span> PRIVILEGES <span class="keyword">ON</span> glance<span class="built_in">.</span><span class="subst">*</span> <span class="keyword">TO</span> <span class="string">'glance'</span>@<span class="string">'%'</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">'123456'</span>；</div></pre></figure>
+
+<p>第5步，为Image service创建数据库表</p>
+<pre><code>su <span class="operator">-s</span> /bin/sh -c <span class="string">"glance-manage db_sync"</span> glance；
+</code></pre><p>第6步，创建一个glance用户，用于身份验证服务对Image Service的验证。设定service租户赋予admin 角色：</p>
+<pre><code><span class="comment">keystone</span> <span class="comment">user</span><span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">name=glance</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">pass=123456</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">email=glance@example</span>
+<span class="comment">keystone</span> <span class="comment">user</span><span class="literal">-</span><span class="comment">role</span><span class="literal">-</span><span class="comment">add</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">user=glance</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">tenant=service</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">role=admin；</span>
+</code></pre><p>第7步，修改Image Service用于Identity<br>Service验证的配置文件，编辑配置文件/etc/glance/glance-api.conf 和 /etc/glance/glance-registry.conf，添加以下内容：</p>
+<figure class="highlight"><pre><div class="line"><span class="title">[keystone_authtoken]</span></div><div class="line"><span class="setting">auth_uri = <span class="value">http://controller:<span class="number">5000</span></span></span></div><div class="line"><span class="setting">auth_host = <span class="value">controller</span></span></div><div class="line"><span class="setting">auth_port = <span class="value"><span class="number">35357</span></span></span></div><div class="line"><span class="setting">auth_protocol = <span class="value">http</span></span></div><div class="line"><span class="setting">admin_tenant_name = <span class="value">service</span></span></div><div class="line"><span class="setting">admin_user = <span class="value">glance</span></span></div><div class="line"><span class="setting">admin_password =<span class="value"><span class="number">123456</span></span></span></div><div class="line"><span class="title">[paste_deploy]</span></div><div class="line"><span class="setting">flavor = <span class="value">keystone；</span></span></div></pre></figure>
+
+<p>第8步，在Identity Service中注册Image的服务，创建相应的endpoint：</p>
+<figure class="highlight"><pre><div class="line">keystone service-create <span class="variable">--name=</span>glance <span class="variable">--type=</span>image <span class="variable">--description=</span><span class="string">"OpenStack Image Service"</span></div><div class="line">keystone endpoint-create <span class="variable">--service-id=</span>$(keystone service-list | awk '/ image / {print $<span class="number">2</span>}') \</div><div class="line"><span class="variable">--publicurl=</span>http://controller:<span class="number">9292</span> \</div><div class="line"><span class="variable">--internalurl=</span>http://controller:<span class="number">9292</span> \</div><div class="line"><span class="variable">--adminurl=</span>http://controller:<span class="number">9292</span>；</div></pre></figure>
+
+<p>最后，重启相关服务：</p>
+<pre><code><span class="class"><span class="keyword">service</span> <span class="title">glance</span>-registry restart
+service glance-api restart</span>
+</code></pre><h3 id="3-2_验证Glance服务的安装">3.2 验证Glance服务的安装</h3>
+<p>第1步，创建一个保存镜像的目录，并下载一个测试镜像：</p>
+<figure class="highlight"><pre><div class="line">mkdir /tmp/images</div><div class="line"><span class="keyword">cd</span> /tmp/images/</div><div class="line">wget http://cdn.download.cirros-cloud.<span class="winutils">net</span>/<span class="number">0</span>.<span class="number">3</span>.<span class="number">2</span>/cirros-<span class="number">0</span>.<span class="number">3</span>.<span class="number">2</span>-x86_64-disk.img</div></pre></figure>
+
+<p>第2步，上传镜像到image service：</p>
+<figure class="highlight"><pre><div class="line"><span class="keyword">source</span> admin-openrc.sh</div><div class="line">glance <span class="keyword">image</span>-create --name <span class="string">"cirros-0.3.2-x86_64"</span> --disk-<span class="keyword">format</span> qcow2 \</div><div class="line">  --<span class="keyword">container</span>-<span class="keyword">format</span> bare --is-public True --progress &lt; cirros-<span class="number">0.3</span><span class="number">.2</span>-x86_64-disk.img；</div></pre></figure>
+
+<p>最后，查看上传的镜像：glance image-list，如果没有提示错误，并且能正确返回刚才创建的镜像信息，说明image service已成功安装。可进一步通过查看日志排查错误，保证正确运行。</p>
+<h2 id="参考文献">参考文献</h2>
+<ol>
+<li><p>OpenStack Docs, <a href="http://docs.openstack.org" target="_blank" rel="external">http://docs.openstack.org</a></p>
+</li>
+<li><p>Ask OpenStack, <a href="https://ask.openstack.org" target="_blank" rel="external">https://ask.openstack.org</a></p>
+</li>
+</ol>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/OpenStack/">OpenStack</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/Openstack/">Openstack</a><a class="btn btn-info" href="/tags/Keystone/">Keystone</a><a class="btn btn-info" href="/tags/Glance/">Glance</a><a class="btn btn-info" href="/tags/安装/">安装</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <h1 class="page-sub-title">留言</h1>
+    <!-- Duoshuo Comment BEGIN -->
+    <div class="ds-thread" data-title="OpenStack组件分析及安装指导(2)--身份验证服务、镜像服务">
+
+    <script type="text/javascript">
+        var duoshuoQuery = {short_name:"renzh"};
+        (function() {
+            var ds = document.createElement('script');
+            ds.type = 'text/javascript';
+            ds.async = true;
+            ds.src = 'http://static.duoshuo.com/embed.js';
+            ds.charset = 'UTF-8';
+            (document.getElementsByTagName('head')[0] 
+            || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+    </script>
+    <!-- Duoshuo Comment END -->
+    </div>
+</section>
+
+
+        </div>
+    </div>
+    <footer id="page-footer"><div class="footer-content">
+    <div class="container-center">
+        <div class="footer-text pull-right">
+            <div class="copyright">
+                
+                Copyright &copy; 2015 <a href="/">Sunset_Ren</a>
+                
+            </div>
+            <div class="social-group pull-right">
+                
+                <a href="https://github.com/renzhh" target="_blank" title="github"><i class="icon-github"></i></a>
+                
+                
+                <a href="http://weibo.com/1977955700" target="_blank" title="新浪微博"><i class="icon-weibo"></i></a>
+                
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+</footer>
+    
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script>
+    (function($) {
+        //当内容区内容不够长时，设置内容区域的高度使footer沉底
+        var resizeContentWrapper = function() {
+            //HACK: 用延时的方法使计算高度时候更加准确，会有一闪的情况
+            setTimeout(function() {
+                var contentHeight = Math.floor($('#content-wrapper .container-center').height()),
+                headerHeight = Math.floor($('#page-header').height()),
+                footerHeight = Math.floor($('#page-footer').height()),
+                minHeight = Math.floor($(window).height() - headerHeight - footerHeight);
+                if(contentHeight < minHeight) {
+                    $('#content-wrapper').css({height: minHeight});                    
+                } else {
+                    $('#content-wrapper').css({height: 'auto'});
+                }
+            },500);
+        };
+
+        //响应式侧边栏
+        var initJPanelMenu = function() {
+            var jPM = $.jPanelMenu({
+                menu: '#jPanelMenu-menu-side',
+                duration: 500
+            });
+            jPM.on();
+        };
+
+        //初始化目录按钮事件绑定
+        var initCategory = function() {
+            function showMainMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.category-menu').hide();
+                $jPanelMenu.find('ul.main-menu').fadeIn();
+            }
+
+            function showCategoryMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.main-menu').hide();
+                $jPanelMenu.find('ul.category-menu').fadeIn();
+            }
+
+            $('.menu-category').click(function() {
+                var jPM = $.jPanelMenu({
+                    duration: 500,
+                    beforeOpen: function() {
+                        showCategoryMenu();
+                    },
+                    afterClose: function() {
+                        showMainMenu();
+                    }
+                });
+                if(jPM.isOpen()) {
+                    showCategoryMenu();
+                } else {
+                    jPM.open();
+                }
+            });
+
+            $('.category-menu').on('click', '.btn-back', function() {
+                showMainMenu();
+            });
+        };
+
+        $(document).ready(resizeContentWrapper);
+        $(document).ready(initJPanelMenu);
+        $(document).ready(initCategory);
+        
+        $(window).resize(resizeContentWrapper);
+    })(jQuery);
+</script>
+</body>
+</html>

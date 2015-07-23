@@ -1,0 +1,440 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    
+    <title>OpenStack组件分析及安装指导(3)--计算虚拟化服务 | 夕阳·然诺</title>
+    <meta name="author" content="Sunset_Ren">
+    
+    <meta name="description" content="夕阳·然诺, 一枚在校生的技术、生活实录">
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <meta property="og:title" content="OpenStack组件分析及安装指导(3)--计算虚拟化服务"/>
+    <meta property="og:site_name" content="夕阳·然诺"/>
+
+    <link rel="alternate" href="/atom.xml" title="夕阳·然诺" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/normalize.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/furatto.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify_raytaylorism.css" type="text/css">
+        
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.10.2.min.js"></script>
+    <script src="/js/jquery.jpanelmenu.js"></script>
+</head>
+
+
+<body class="container-fluid">
+    <header id="page-header">
+        <div class="navbar inverse-navbar">
+    <div class="navbar-inner">
+        <div class="container-center">
+            <a href="/index.html" class="menu-trigger" data-meteocon="M">
+                <i class="icon-reorder"></i>
+            </a>
+            <div class="nav-collapse navbar-responsive-collapse collapse">
+                <nav id="menu">
+                    <ul class="nav">
+                        <li><a class="brand" id="blog-title" href="/index.html">夕阳·然诺</a></li>
+                    </ul>
+                    <div class="pull-right nav" id="nav-button-group">
+                        
+                            <a href="/" class="menu-home btn btn-primary btn-large">
+                                <i class="icon-home icon-white"></i>
+                                首页
+                            </a>
+                        
+                            <a href="/archives" class="menu-archive btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                归档
+                            </a>
+                        
+                            <a href="javascript:void(0);" class="menu-category btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                分类
+                            </a>
+                        
+                            <a href="/reading" class="menu-reading btn btn-primary btn-large">
+                                <i class="icon-book icon-white"></i>
+                                读书
+                            </a>
+                        
+                            <a href="/about" class="menu-about btn btn-primary btn-large">
+                                <i class="icon-user icon-white"></i>
+                                关于
+                            </a>
+                        
+                    </div>
+                </nav>
+                <nav id="jPanelMenu-menu-side">
+    <ul class="nav main-menu">
+        <li><a class="brand" href="index.html">夕阳·然诺</a></li>
+        
+            <li>
+                <a href="/" class="menu-home">
+                    <i class="icon-home icon-white"></i>
+                    首页
+                </a>
+            </li>
+        
+            <li>
+                <a href="/archives" class="menu-archive">
+                    <i class="icon-archive icon-white"></i>
+                    归档
+                </a>
+            </li>
+        
+            <li>
+                <a href="javascript:void(0);" class="menu-category">
+                    <i class="icon-archive icon-white"></i>
+                    分类
+                </a>
+            </li>
+        
+            <li>
+                <a href="/reading" class="menu-reading">
+                    <i class="icon-book icon-white"></i>
+                    读书
+                </a>
+            </li>
+        
+            <li>
+                <a href="/about" class="menu-about">
+                    <i class="icon-user icon-white"></i>
+                    关于
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="nav category-menu hide">
+        <li>
+            <span><a class="brand" href="javascript:void(0);">分类目录</a></span>
+            <span><a class="btn-back brand pull-right" href="javascript:void(0);">
+                <i class="icon-arrow-left"></i>
+            </a></span>
+        </li>
+
+        
+
+        
+
+            
+
+            <li collapse-level="0">
+                <a href="/categories/markdown/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    markdown(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/OpenStack/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    OpenStack(5)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/Linux/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    Linux(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+        
+    </ul>
+</nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </header>
+    <div id="content-wrapper">
+        <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>OpenStack组件分析及安装指导(3)--计算虚拟化服务</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2014-09-25T15:10:59.000Z">2014 09 25</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Nova服务"><span class="toc-number">1.</span> <span class="toc-text">Nova服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Nova服务在Controller节点的安装"><span class="toc-number">1.1.</span> <span class="toc-text">Nova服务在Controller节点的安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Compute节点的安装"><span class="toc-number">1.2.</span> <span class="toc-text">Compute节点的安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">2.</span> <span class="toc-text">参考文献</span></a></li></ol>
+    </div>
+
+    <div class="entry">
+        <p>在上一篇”OpenStack组件分析及安装指导(2)—身份验证服务、镜像服务”中对OpenStack身份验证服务、OpenStack命令行客户端以及镜像服务进行了说明。本文将介绍OpenStack的核心，提供计算虚拟化服务的组件—Nova.</p>
+<h2 id="Nova服务">Nova服务</h2>
+<p>计算服务，即Nova是云计算的结构控制器，是IaaS系统的主要部分，用它来承载并管理云计算系统，可以水平扩展到多台机器上，其主要模块用python实现。计算服务通过与身份验证服务交互实现验证，通过与镜像服务交互获取镜像，通过与Dashboard服务交互使用管理界面。计算服务是允许用户启动虚拟机实例服务的集合。</p>
+<a id="more"></a>
+<p>OpenStack由几个主要的组件组合起来完成具体的工作。主要的组件包括：RabbitMQ, Keystone, Glance, Nova, Neutron, Dashboard, Cinder, Swift, 和Ceilometer等。相关介绍如下:</p>
+<ul>
+<li>RabbitMQ: 消息代理，协调服务中的操作和状态信息</li>
+<li>Keystone: 身份验证、服务规则和服务令牌，它实现了OpenStack的Identity API</li>
+<li>Glance: 提供镜像服务，旨在发现，注册和交付虚拟机磁盘和镜像</li>
+<li>Nova: 提供计算虚拟化服务，是OpenStack的核心，负责管理和创建虚拟机</li>
+<li>Neutron: 提供网络虚拟化服务，是一个可拔插，可扩展，API驱动的服务</li>
+<li>Dashboard: 提供了一个图形控制台服务，让用户方便地访问，使用和维护OpenStack中的资源</li>
+<li>Cinder: 提供块存储服务，为OpenStack的虚拟机提供持久的块级存储设备。支持诸如Ceph，EMC等多种存储后端</li>
+<li>Swift: 提供对象存储服务，是一个分布式，可扩展，多副本的存储系统</li>
+</ul>
+<p>OpenStack的概念架构图 (包含重要组件)如 <a href="http://7naqqb.com1.z0.glb.clouddn.com/OpenStack概念架构图.jpg" target="_blank" rel="external">图1</a> 所示，重要组件间的通信也标出。</p>
+<div align="center"><br>    <img src="http://7naqqb.com1.z0.glb.clouddn.com/OpenStack概念架构图.jpg" width="640" height="500" alt="图1. OpenStack概念架构图"><br><br>    图1. OpenStack概念架构图<br></div>
+
+<p>典型的采用neutron网络三节点架构的OpenStack系统各节点包含哪些组件服务参考 <a href="http://7naqqb.com1.z0.glb.clouddn.com/OpenStack Architecture各节点组件分布图.JPG" target="_blank" rel="external">图2</a> 。</p>
+<div align="center"><br>    <img src="http://7naqqb.com1.z0.glb.clouddn.com/OpenStack Architecture各节点组件分布图.JPG" width="600" height="500" alt="图2. OpenStack Architecture各节点组件分布图"><br><br>    图2. OpenStack Architecture各节点组件分布图<br></div>
+
+<p>本文档将在<strong><em>Controller</em></strong>节点和<strong><em>Compute</em></strong>节点安装compute服务。</p>
+<h3 id="Nova服务在Controller节点的安装">Nova服务在Controller节点的安装</h3>
+<p>第1步，安装必要的计算服务包</p>
+<pre><code>apt-<span class="built_in">get</span> install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler <span class="keyword">python</span>-novaclient
+</code></pre><p>第2步，修改nova的配置文件，指定Controller节点使用的MySQL数据库。编辑/etc/nova/nova.conf文件中[database]部分，添加</p>
+<pre><code>connection = mysq<span class="variable">l:</span>//nov<span class="variable">a:123456</span>@controller/nova11
+</code></pre><p>第3步，配置计算服务使用RabbitMQ消息代理，编辑/etc/nova/nova.conf文件中[DEFAULT]部分，修改如下：</p>
+<figure class="highlight"><pre><div class="line"><span class="variable">rpc_backend =</span> rabbit</div><div class="line"><span class="variable">rabbit_host =</span> controller</div><div class="line"><span class="variable">rabbit_password =</span> <span class="number">123456</span></div></pre></figure>
+
+<p>第4步，使用Controller节点的管理接口ip来配置vncserver以及proxyclient相关ip。编辑/etc/nova/nova.conf文件中[DEFAULT]部分，修改如下：</p>
+<figure class="highlight"><pre><div class="line"><span class="title">my_ip</span> = <span class="number">192.168.0.11</span></div><div class="line">vncserver_listen=<span class="number">192.168.0.11</span></div><div class="line">vncserver_proxyclient_address=<span class="number">192.168.0.11</span></div></pre></figure>
+
+<p>第5步，在/var/lib/nova目录下删除nova.sqlite文件 (默认使用SQLite数据库)</p>
+<pre><code>rm <span class="regexp">/var/</span>lib<span class="regexp">/nova/</span>nova.sqlite
+</code></pre><p>第6步，以root身份登录数据库库，创建nova的数据库用户nova，并授权nova服务给其他用户：</p>
+<figure class="highlight"><pre><div class="line">mysql <span class="attribute">-u</span> root <span class="attribute">-p</span></div><div class="line">mysql<span class="subst">&gt;</span> CREATE DATABASE nova11;</div><div class="line">mysql<span class="subst">&gt;</span> GRANT <span class="literal">ALL</span> PRIVILEGES <span class="keyword">ON</span> nova<span class="built_in">.</span><span class="subst">*</span> <span class="keyword">TO</span> <span class="string">'nova'</span>@<span class="string">'localhost'</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">'123456'</span>;</div><div class="line">mysql<span class="subst">&gt;</span> GRANT <span class="literal">ALL</span> PRIVILEGES <span class="keyword">ON</span> nova<span class="built_in">.</span><span class="subst">*</span> <span class="keyword">TO</span> <span class="string">'nova'</span>@<span class="string">'network'</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">'NOVA_DBPASS'</span>;</div></pre></figure>
+
+<p>第7步，为计算服务创建数据库表</p>
+<pre><code>su <span class="operator">-s</span> /bin/sh -c <span class="string">"nova-manage db sync"</span> nova；
+</code></pre><p>第8步，创建一个用来和身份验证服务交互的用户nova，并设定租户是service，admin角色：</p>
+<pre><code><span class="comment">keystone</span> <span class="comment">user</span><span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">name=nova</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">pass=123456</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">email=nova@example</span><span class="string">.</span><span class="comment">com;</span>
+<span class="comment">keystone</span> <span class="comment">user</span><span class="literal">-</span><span class="comment">role</span><span class="literal">-</span><span class="comment">add</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">user=nova</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">tenant=service</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">role=admin；</span>
+</code></pre><p>第9步，配置计算服务以使用身份验证服务的凭据，配置如下：<br>编辑/etc/nova/nova.conf文件中[DEFAULT]部分，添加auth_strategy = keystone;在[keystone_authtoken]部分添加：</p>
+<figure class="highlight"><pre><div class="line"><span class="variable">auth_uri =</span> http://controller:<span class="number">5000</span></div><div class="line"><span class="variable">auth_host =</span> controller</div><div class="line"><span class="variable">auth_port =</span> <span class="number">35357</span></div><div class="line"><span class="variable">auth_protocol =</span> http</div><div class="line"><span class="variable">admin_tenant_name =</span> service</div><div class="line"><span class="variable">admin_user =</span> nova</div><div class="line"><span class="variable">admin_password =</span> <span class="number">123456</span></div><div class="line"><span class="variable">auth_version =</span> v2.<span class="number">0</span>；</div></pre></figure>
+
+<p>最后，在身份验证服务中注册计算服务，使得其他OpenStack服务可以访问它，并指定endpoint</p>
+<figure class="highlight"><pre><div class="line">keystone service-create --name=nova --type=compute --description="OpenStack Compute"</div><div class="line">keystone endpoint-create \</div><div class="line">-<span class="ruby">-service-id=<span class="variable">$(</span>keystone service-list | awk <span class="string">'/ compute / {print $2}'</span>) \</span></div><div class="line">-<span class="ruby">-publicurl=<span class="symbol">http:</span>/<span class="regexp">/controller:8774/v</span>2/%\(tenant_id\)s \</span></div><div class="line">-<span class="ruby">-internalurl=<span class="symbol">http:</span>/<span class="regexp">/controller:8774/v</span>2/%\(tenant_id\)s \</span></div><div class="line">-<span class="ruby">-adminurl=<span class="symbol">http:</span>/<span class="regexp">/controller:8774/v</span>2/%\(tenant_id\)s。</span></div></pre></figure>
+
+<p>接下来，重启计算服务：service nova-api, nova-cert, nova-consoleauth, nova-scheduler, no-va-conductor, nova-novncproxy restart。通过命令nova image-list可验证配置是否有问题，若列出可使用的镜像，则配置基本没问题。</p>
+<h3 id="Compute节点的安装">Compute节点的安装</h3>
+<p>Compute节点接收来自Controller节点的请求，并管理虚拟机实例。计算服务依赖hypervisor (虚拟机管理程序)运行虚拟机实例，OpenStack支持多种hypervisor，最典型的使用KVM，我们亦采用KVM。</p>
+<p>第1步，安装计算服务包</p>
+<pre><code>apt-<span class="built_in">get</span> install nova-compute-kvm <span class="keyword">python</span>-guestfs
+</code></pre><p>第2步，运行命令</p>
+<pre><code>dpkg-statoverride --<span class="keyword">update</span> --<span class="built_in">add</span> root root <span class="number">0644</span> /boot/vmlinuz-$(uname -<span class="keyword">r</span>) 
+</code></pre><p>使当前内核可读 (通常为了安全考虑，Linux内核对于普通用户不可读，这会限制hypervisor的服务)；</p>
+<p>第3步，修改nova配置文件，添加keystone验证部分和数据库：</p>
+<figure class="highlight auth_strategy"><figcaption><span>= keystone</span></figcaption><pre><div class="line"><span class="title">[database]</span></div><div class="line"><span class="setting">connection = <span class="value">mysql://nova:<span class="number">123456</span>@controller/nova11</span></span></div><div class="line"><span class="title">[keystone_authtoken]</span></div><div class="line"><span class="setting">auth_uri = <span class="value">http://controller:<span class="number">5000</span></span></span></div><div class="line"><span class="setting">auth_host = <span class="value">controller</span></span></div><div class="line"><span class="setting">auth_port = <span class="value"><span class="number">35357</span></span></span></div><div class="line"><span class="setting">auth_protocol = <span class="value">http</span></span></div><div class="line"><span class="setting">admin_tenant_name = <span class="value">service</span></span></div><div class="line"><span class="setting">admin_user = <span class="value">nova</span></span></div><div class="line"><span class="setting">admin_password = <span class="value"><span class="number">123456</span></span></span></div><div class="line"><span class="setting">auth_version = <span class="value">v2.<span class="number">0</span>；</span></span></div></pre></figure>
+
+<p>第4步，配置计算服务使用RabbitMQ消息代理，编辑/etc/nova/nova.conf文件中[DEFAULT]部分，修改如下：</p>
+<figure class="highlight"><pre><div class="line"><span class="variable">rpc_backend =</span> rabbit</div><div class="line"><span class="variable">rabbit_host =</span> controller</div><div class="line"><span class="variable">rabbit_password =</span> <span class="number">123456</span>；</div></pre></figure>
+
+<p>第5步，配置计算服务以提供远程控制台访问实例，编辑/etc/nova/nova.conf文件中[DEFAULT]部分，修改如下：</p>
+<figure class="highlight"><pre><div class="line"><span class="setting">my_ip = <span class="value">compute1</span></span></div><div class="line"><span class="setting">vnc_enabled = <span class="value"><span class="keyword">True</span></span></span></div><div class="line"><span class="setting">vncserver_listen = <span class="value"><span class="number">0.0</span>.<span class="number">0.0</span></span></span></div><div class="line"><span class="setting">vncserver_proxyclient_address = <span class="value">compute1</span></span></div><div class="line"><span class="setting">novncproxy_base_url = <span class="value">http://<span class="number">10.1</span>.<span class="number">9.201</span>:<span class="number">6080</span>/vnc_auto.html；</span></span></div></pre></figure>
+
+<p>第6步，指定运行镜像服务的主机，编辑/etc/nova/nova.conf文件中[DEFAULT]部分，添加glance_host = controller；</p>
+<p>第7步，确定系统的处理和hypervisor是否支持虚拟机的硬件加速，运行命令：egrep -c ‘(vmx|svm)’ /proc/cpuinfo，返回32，表示我们的系统在不许额外配置的情况下支持硬件加速；若返回0，则需再配置libvirt来使用QEMU代替KVM，在此不做详细说明；</p>
+<p>第8步，删除由包创建的SQLite数据库</p>
+<pre><code>rm <span class="regexp">/var/</span>lib<span class="regexp">/nova/</span>nova.sqlite
+</code></pre><p>最后，重启计算服务</p>
+<pre><code><span class="class"><span class="keyword">service</span> <span class="title">nova</span>-compute restart。</span>
+</code></pre><h2 id="参考文献">参考文献</h2>
+<ol>
+<li><p>OpenStack Docs, <a href="http://docs.openstack.org" target="_blank" rel="external">http://docs.openstack.org</a></p>
+</li>
+<li><p>Ask OpenStack, <a href="https://ask.openstack.org" target="_blank" rel="external">https://ask.openstack.org</a></p>
+</li>
+</ol>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/OpenStack/">OpenStack</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/Openstack/">Openstack</a><a class="btn btn-info" href="/tags/Nova/">Nova</a><a class="btn btn-info" href="/tags/hypervisor/">hypervisor</a><a class="btn btn-info" href="/tags/安装/">安装</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <h1 class="page-sub-title">留言</h1>
+    <!-- Duoshuo Comment BEGIN -->
+    <div class="ds-thread" data-title="OpenStack组件分析及安装指导(3)--计算虚拟化服务">
+
+    <script type="text/javascript">
+        var duoshuoQuery = {short_name:"renzh"};
+        (function() {
+            var ds = document.createElement('script');
+            ds.type = 'text/javascript';
+            ds.async = true;
+            ds.src = 'http://static.duoshuo.com/embed.js';
+            ds.charset = 'UTF-8';
+            (document.getElementsByTagName('head')[0] 
+            || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+    </script>
+    <!-- Duoshuo Comment END -->
+    </div>
+</section>
+
+
+        </div>
+    </div>
+    <footer id="page-footer"><div class="footer-content">
+    <div class="container-center">
+        <div class="footer-text pull-right">
+            <div class="copyright">
+                
+                Copyright &copy; 2015 <a href="/">Sunset_Ren</a>
+                
+            </div>
+            <div class="social-group pull-right">
+                
+                <a href="https://github.com/renzhh" target="_blank" title="github"><i class="icon-github"></i></a>
+                
+                
+                <a href="http://weibo.com/1977955700" target="_blank" title="新浪微博"><i class="icon-weibo"></i></a>
+                
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+</footer>
+    
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script>
+    (function($) {
+        //当内容区内容不够长时，设置内容区域的高度使footer沉底
+        var resizeContentWrapper = function() {
+            //HACK: 用延时的方法使计算高度时候更加准确，会有一闪的情况
+            setTimeout(function() {
+                var contentHeight = Math.floor($('#content-wrapper .container-center').height()),
+                headerHeight = Math.floor($('#page-header').height()),
+                footerHeight = Math.floor($('#page-footer').height()),
+                minHeight = Math.floor($(window).height() - headerHeight - footerHeight);
+                if(contentHeight < minHeight) {
+                    $('#content-wrapper').css({height: minHeight});                    
+                } else {
+                    $('#content-wrapper').css({height: 'auto'});
+                }
+            },500);
+        };
+
+        //响应式侧边栏
+        var initJPanelMenu = function() {
+            var jPM = $.jPanelMenu({
+                menu: '#jPanelMenu-menu-side',
+                duration: 500
+            });
+            jPM.on();
+        };
+
+        //初始化目录按钮事件绑定
+        var initCategory = function() {
+            function showMainMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.category-menu').hide();
+                $jPanelMenu.find('ul.main-menu').fadeIn();
+            }
+
+            function showCategoryMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.main-menu').hide();
+                $jPanelMenu.find('ul.category-menu').fadeIn();
+            }
+
+            $('.menu-category').click(function() {
+                var jPM = $.jPanelMenu({
+                    duration: 500,
+                    beforeOpen: function() {
+                        showCategoryMenu();
+                    },
+                    afterClose: function() {
+                        showMainMenu();
+                    }
+                });
+                if(jPM.isOpen()) {
+                    showCategoryMenu();
+                } else {
+                    jPM.open();
+                }
+            });
+
+            $('.category-menu').on('click', '.btn-back', function() {
+                showMainMenu();
+            });
+        };
+
+        $(document).ready(resizeContentWrapper);
+        $(document).ready(initJPanelMenu);
+        $(document).ready(initCategory);
+        
+        $(window).resize(resizeContentWrapper);
+    })(jQuery);
+</script>
+</body>
+</html>
